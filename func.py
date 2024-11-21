@@ -88,23 +88,27 @@ def prepare_output_string_list(df, target_index_list):
 
 def prepare_inverted_index(address_string_list):
     """
-    住所文字列のリストから2-gramベースの転置インデックスを作成する
-    検索用の住所文字列のリストから2-gramで転置インデックスを生成する
+    住所文字列のリストから転置インデックスの辞書を作成する
 
     Args:
         address_string_list (list[str]): 住所文字列のリスト。各要素は結合された住所情報を含む
 
     Returns:
-        defaultdict[str, set[int]]: 転置インデックス。
+        defaultdict[str, set[int]]: 転置インデックスの辞書
             - キー: 2文字のトークン（2-gram）
             - 値: そのトークンが出現する住所のインデックスを含む集合
-            例：{
-                "東京": {1, 2, 3...}, 
-                "京都": {2, 3, 4 ...},
+            例：
+            {
+                "北海": {0, 1, 2, ...},
+                "海道": {0, 1, 2, ...},
+                "道札": {0, 1, 2, ...},
+                ...
+                "東十": {9088, 9089, 11293, ...},
+                "十条": {2055, 529, 530, ...},
                 ...
             }
     """
-    # キーの存在確認を簡潔にするためにdefaultdictを使用
+    # 新規キー追加処理を簡潔にするためにdefaultdictを使用
     # 各トークンに対するインデックス保持はsetで行う
     inverted_index_dict = defaultdict(set)
     
@@ -131,11 +135,11 @@ def generate_inverted_index_json(address_string_list):
 
 def search_address(inverted_index, search_q):
     """
-    検索クエリに一致する住所のインデックスを返す。
+    検索語に一致する住所のインデックスを返す。
 
     Args:
         inverted_index (dict): 転置インデックス
-        search_q (string): 検索クエリ文字列
+        search_q (string): 検索語の文字列
 
     Returns:
         list[int]: 一致する住所のインデックスリスト
@@ -147,7 +151,6 @@ def search_address(inverted_index, search_q):
     first_token = search_tokens[0]
     temp_index_set = set(inverted_index[first_token])
     
-    # すべてのトークンと照合するindex要素を抽出
     for search_token in search_tokens[1:]:
         target_index_list = inverted_index[search_token]
         temp_index_set &= set(target_index_list)
@@ -158,17 +161,17 @@ def search_address(inverted_index, search_q):
 
 def filter_index(address_string_list, target_index_list, search_q):
     """
-    転置インデックスで絞り込んだ結果から、検索クエリを完全一致で含む住所のインデックスのみを抽出する
+    転置インデックスで絞り込んだ結果から、検索語を完全一致で含む住所のインデックスのみを抽出する
 
     Args:
         address_string_list (list[str]): 住所文字列のリスト
         target_index_list (list[int]): 転置インデックスによる検索で絞り込まれた住所のインデックスリスト
-        search_q (str): 検索クエリ文字列
+        search_q (str): 検索語の文字列
 
     Returns:
-        list[int]: 検索クエリを完全一致で含む住所のインデックスリスト
+        list[int]: 検索語を完全一致で含む住所のインデックスリスト
             - 転置インデックスによる検索結果をさらに絞り込んだもの
-            - 検索クエリが住所文字列の部分文字列として存在するもののみを含む
+            - 検索語が住所文字列の部分文字列として存在するもののみを含む
     """
     filtered_index_list = []
     
