@@ -9,7 +9,7 @@
 ## デモ
 アプリケーションの動作は以下のstreamlitのリンクから実際に確認することができます。
 
-https://search-address-unuhpep2kweikmpzkvdyux.streamlit.app/
+[streamlitアプリケーション](https://search-address-unuhpep2kweikmpzkvdyux.streamlit.app/)
 
 ---
 
@@ -26,6 +26,5 @@ https://search-address-unuhpep2kweikmpzkvdyux.streamlit.app/
 ---
 
 ## 参考文献
-
-    - https://zenn.dev/kun432/scraps/0230c0dcbacddc
-    - https://youtu.be/FqABNJ6fGXQ
+- [転置インデックスを実際に試してみる](https://zenn.dev/kun432/scraps/0230c0dcbacddc)
+- [【検索エンジン】検索エンジンことはじめ！【基礎編】](https://youtu.be/FqABNJ6fGXQ)
